@@ -1,0 +1,78 @@
+# =============================================================================
+# SalesInsight PY — .gitignore
+# =============================================================================
+
+# Ambiente virtual Python
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+
+# Distribuição / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+
+# Outputs gerados pelo pipeline (não versionar arquivos gerados)
+outputs/metricas_por_mes.csv
+outputs/segmentacao_clientes.csv
+outputs/estatisticas_gerais.json
+outputs/graficos/*.png
+# Manter .gitkeep para preservar a estrutura de pastas
+!outputs/.gitkeep
+!outputs/graficos/.gitkeep
+!outputs/context_pack.md
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# IDEs e editores
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+
+# Sistema operacional
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Credenciais e secrets (nunca versionar!)
+.env
+.env.*
+secrets.json
+credentials.json
+*.key
+*.pem
