@@ -6,7 +6,7 @@ os dados sujos esperados para o pipeline de limpeza.
 import pytest
 import pandas as pd
 import numpy as np
-from conftest import COLUNAS_BRUTO, PRODUTOS, REGIOES
+from tests.conftest import COLUNAS_BRUTO, PRODUTOS, REGIOES
 
 
 class TestGeracaoDataset:

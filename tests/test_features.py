@@ -5,7 +5,7 @@ Valida criação de receita_total, mes, trimestre, ano e faixa_receita_item.
 import pytest
 import pandas as pd
 import numpy as np
-from conftest import COLUNAS_DERIVADAS
+from tests.conftest import COLUNAS_DERIVADAS
 
 
 class TestColunasDerivadas:

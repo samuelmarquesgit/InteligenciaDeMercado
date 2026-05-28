@@ -4,7 +4,7 @@ Valida classificação Bronze/Prata/Ouro usando lambda.
 """
 import pytest
 import pandas as pd
-from conftest import SEGMENTOS
+from tests.conftest import SEGMENTOS
 
 
 class TestSegmentacaoClientes:
