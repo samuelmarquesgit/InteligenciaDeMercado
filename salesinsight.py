@@ -162,11 +162,11 @@ def limpar_dados(df: pd.DataFrame) -> tuple:
     registros_iniciais = len(df)
 
     # Remove espaços em colunas string
-    for col in df.select_dtypes(include="object").columns:
+    for col in df.select_dtypes(include=["object", "str"]).columns:
         df[col] = df[col].str.strip()
 
     # Converte data_venda e remove inválidas
-    df["data_venda"] = pd.to_datetime(df["data_venda"], errors="coerce")
+    df["data_venda"] = pd.to_datetime(df["data_venda"], format="mixed", errors="coerce")
     datas_invalidas = int(df["data_venda"].isnull().sum())
     df = df.dropna(subset=["data_venda"])
 

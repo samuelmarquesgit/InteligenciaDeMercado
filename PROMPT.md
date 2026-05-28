@@ -25,7 +25,7 @@ samuelmarquesgit/InteligenciaDeMercado para outras tarefas.
 Quero uma branch main, uma branch develop e toda issue ou task executada
 quero um commit semântico com uma branch semântica. Também iremos criar um
 arquivo pull_request_template.md de Pull Request (PR) onde ficará O que foi
-feito (entre outras coisas necessárias, me surpreenda)
+feito (entre outras coisas necessárias, me surpreenda).
 ```
 
 **Resultado:** Leitura do .docx iniciada (problema de ambiente — sem shell POSIX)
@@ -130,19 +130,10 @@ steering/tech.md
 ```
 sim, faça a clonagem, mas eu preciso que crie os arquivos de teste de toda
 a estrutura utilizando o pytest.
-quero também que faça um commit para cada arquivo, crie uma issue para cada
-arquivo....
-Sei que é mais simples fazer tudo de uma só vez, mas não quero que commit
-tudo de uma só vez. Faça o commit inicial somente com o README.md ......
 
-Preciso contabilizar commits nesse projeto, quanto mais commits melhor....
-por gentileza gravar todos os prompts no arquivo de PROMPT.md, menos essa
-frase aqui......
 ```
 
-**Resultado:** Script de automação criado, arquivos de teste pytest gerados,
-issues e commits individuais via script Python
-
+**Resultado:** Script de automação criado, arquivos de teste pytest gerados.
 ---
 
 ## Como Usar Este Arquivo
