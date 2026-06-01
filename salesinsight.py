@@ -410,7 +410,7 @@ def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
         fig, ax = plt.subplots(figsize=(7, 7))
         contagem = clientes["segmento"].value_counts()
         cores = {"Ouro": "#FFD700", "Prata": "#C0C0C0", "Bronze": "#CD7F32"}
-        cores_lista = [cores[s] for s in contagem.index]
+        cores_lista = [cores.get(s, "#999999") for s in contagem.index]
         ax.pie(contagem, labels=contagem.index, autopct="%1.1f%%",
                colors=cores_lista, startangle=90,
                wedgeprops=dict(width=0.5))
@@ -420,7 +420,7 @@ def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
         plt.close(fig)
 
     # 7. Line chart + projeção
-    if projecoes is not None:
+    if projecoes:
         fig, ax = plt.subplots(figsize=(13, 5))
         por_mes = metricas["por_mes"]
         ax.plot(por_mes["mes"], por_mes["receita_total"],
@@ -439,7 +439,8 @@ def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
         fig.savefig(os.path.join(output_dir, "projecao_tendencia.png"), dpi=150)
         plt.close(fig)
 
-    print(f"  [RF08] 7 gráficos salvos em '{output_dir}'") 
+    n = len([f for f in os.listdir(output_dir) if f.endswith(".png")])
+    print(f"  [RF08] {n} gráficos salvos em '{output_dir}'") 
 
 
 # ─── RF09: Classe AnalisadorDeVendas com method chaining ─────────────────────
@@ -505,7 +506,7 @@ class AnalisadorComProjecao(AnalisadorDeVendas):
     def __init__(self, caminho_arquivo: str, meses_projecao: int = 3):
         super().__init__(caminho_arquivo)
         self.meses_projecao = meses_projecao
-        self.projecoes = []
+        self.projecoes = None
 
     def projetar_tendencia(self, taxa_crescimento: float = 0.05):
         """Projeta receita mensal com crescimento composto."""
