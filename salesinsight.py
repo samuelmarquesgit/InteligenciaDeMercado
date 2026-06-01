@@ -506,7 +506,7 @@ class AnalisadorComProjecao(AnalisadorDeVendas):
     def __init__(self, caminho_arquivo: str, meses_projecao: int = 3):
         super().__init__(caminho_arquivo)
         self.meses_projecao = meses_projecao
-        self.projecoes = None
+        self.projecoes = []
 
     def projetar_tendencia(self, taxa_crescimento: float = 0.05):
         """Projeta receita mensal com crescimento composto."""
