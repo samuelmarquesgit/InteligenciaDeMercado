@@ -165,9 +165,11 @@ Neste projeto, os dados são lidos de um arquivo local CSV. Em um cenário de pr
 
 ## Autores
 
-**Samuel Marques** — [@samuelmarquesgit](https://github.com/samuelmarquesgit)
+**Samuel Magalhães Marques** — [@samuelmarquesgit](https://github.com/samuelmarquesgit)
 
-**Bruno Silveira** — [@bruno-d-silveira](https://github.com/bruno-d-silveira)
+**Bruno Duarte da Silveira** — [@bruno-d-silveira](https://github.com/bruno-d-silveira)
+
+**Eduardo Schmidt Bauer**
 
 ---
 
