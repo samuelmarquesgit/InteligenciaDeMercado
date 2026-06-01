@@ -338,7 +338,7 @@ def calcular_estatisticas_numpy(df: pd.DataFrame) -> dict:
 # ─── RF08: Visualizações ─────────────────────────────────────────────────────
 
 def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
-                        clientes: pd.DataFrame, projecoes: list,
+                        clientes: pd.DataFrame = None, projecoes: list = None,
                         output_dir: str = "outputs/graficos") -> None:
     """RF08 — Gera 7 gráficos PNG com matplotlib e seaborn."""
     os.makedirs(output_dir, exist_ok=True)
@@ -406,36 +406,38 @@ def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
     plt.close(fig)
 
     # 6. Donut - segmentação de clientes
-    fig, ax = plt.subplots(figsize=(7, 7))
-    contagem = clientes["segmento"].value_counts()
-    cores = {"Ouro": "#FFD700", "Prata": "#C0C0C0", "Bronze": "#CD7F32"}
-    cores_lista = [cores[s] for s in contagem.index]
-    ax.pie(contagem, labels=contagem.index, autopct="%1.1f%%", 
-           colors=cores_lista, startangle=90,
-           wedgeprops=dict(width=0.5))
-    ax.set_title("Segmentação de Clientes", fontsize=14, fontweight="bold")
-    plt.tight_layout()
-    fig.savefig(os.path.join(output_dir, "segmentacao_clientes.png"), dpi=150)
-    plt.close(fig)
+    if clientes is not None:
+        fig, ax = plt.subplots(figsize=(7, 7))
+        contagem = clientes["segmento"].value_counts()
+        cores = {"Ouro": "#FFD700", "Prata": "#C0C0C0", "Bronze": "#CD7F32"}
+        cores_lista = [cores[s] for s in contagem.index]
+        ax.pie(contagem, labels=contagem.index, autopct="%1.1f%%",
+               colors=cores_lista, startangle=90,
+               wedgeprops=dict(width=0.5))
+        ax.set_title("Segmentação de Clientes", fontsize=14, fontweight="bold")
+        plt.tight_layout()
+        fig.savefig(os.path.join(output_dir, "segmentacao_clientes.png"), dpi=150)
+        plt.close(fig)
 
     # 7. Line chart + projeção
-    fig, ax = plt.subplots(figsize=(13, 5))
-    por_mes = metricas["por_mes"]
-    ax.plot(por_mes["mes"], por_mes["receita_total"],
-            marker="o", color="#4C72B0", linewidth=2, label="Realizado 2024")
-    meses_proj   = [p["mes"] for p in projecoes]
-    valores_proj = [p["receita_projetada"] for p in projecoes]
-    ax.plot(meses_proj, valores_proj,
-            marker="s", color="#DD8452", linewidth=2,
-            linestyle="--", label="Projeção")
-    ax.axvline(x=12, color="gray", linestyle=":", linewidth=1)
-    ax.legend()
-    ax.set_title("Receita Realizada + Projeção", fontsize=14, fontweight="bold")
-    ax.set_xlabel("Mês")
-    ax.set_ylabel("Receita (R$)")
-    plt.tight_layout()
-    fig.savefig(os.path.join(output_dir, "projecao_tendencia.png"), dpi=150)
-    plt.close(fig)
+    if projecoes is not None:
+        fig, ax = plt.subplots(figsize=(13, 5))
+        por_mes = metricas["por_mes"]
+        ax.plot(por_mes["mes"], por_mes["receita_total"],
+                marker="o", color="#4C72B0", linewidth=2, label="Realizado 2024")
+        meses_proj   = [p["mes"] for p in projecoes]
+        valores_proj = [p["receita_projetada"] for p in projecoes]
+        ax.plot(meses_proj, valores_proj,
+                marker="s", color="#DD8452", linewidth=2,
+                linestyle="--", label="Projeção")
+        ax.axvline(x=12, color="gray", linestyle=":", linewidth=1)
+        ax.legend()
+        ax.set_title("Receita Realizada + Projeção", fontsize=14, fontweight="bold")
+        ax.set_xlabel("Mês")
+        ax.set_ylabel("Receita (R$)")
+        plt.tight_layout()
+        fig.savefig(os.path.join(output_dir, "projecao_tendencia.png"), dpi=150)
+        plt.close(fig)
 
     print(f"  [RF08] 7 gráficos salvos em '{output_dir}'") 
 
