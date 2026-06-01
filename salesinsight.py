@@ -385,7 +385,7 @@ def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
             
     # 4. Boxplot - receita por região (exigido pelo PRD)
     fig, ax = plt.subplots(figsize=(10, 6))
-    sns.boxplot(data=df, x="regiao", y="receita_total", palette="muted", ax=ax)
+    sns.boxplot(data=df, x="regiao", y="receita_total", hue="regiao", palette="muted", legend=False, ax=ax)
     ax.set_title("Distribuição de Receita por Região (Boxplot)", fontsize=14, fontweight="bold")
     ax.set_xlabel("Região")
     ax.set_ylabel("Receita por Transação (R$)")
