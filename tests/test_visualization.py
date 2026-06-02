@@ -44,12 +44,35 @@ class TestVisualizacoes:
             path = os.path.join(graficos_dir, nome)
             assert os.path.getsize(path) > 0, f"{nome} está vazio"
 
-    def test_pelo_menos_3_graficos_criados(self, df_enriquecido, metricas, output_dir):
+    def test_pelo_menos_5_graficos_criados(self, df_enriquecido, metricas, output_dir):
         from salesinsight import gerar_visualizacoes
         graficos_dir = os.path.join(output_dir, "graficos")
         gerar_visualizacoes(df_enriquecido, metricas, output_dir=graficos_dir)
         pngs = [f for f in os.listdir(graficos_dir) if f.endswith(".png")]
-        assert len(pngs) >= 3
+        assert len(pngs) >= 5
+
+    def test_cria_grafico_segmentacao_clientes(self, df_enriquecido, metricas, clientes, output_dir):
+        from salesinsight import gerar_visualizacoes
+        graficos_dir = os.path.join(output_dir, "graficos")
+        gerar_visualizacoes(df_enriquecido, metricas, clientes=clientes, output_dir=graficos_dir)
+        arquivo = os.path.join(graficos_dir, "segmentacao_clientes.png")
+        assert os.path.isfile(arquivo), "segmentacao_clientes.png não foi criado"
+        assert os.path.getsize(arquivo) > 0, "segmentacao_clientes.png está vazio"
+
+    def test_cria_grafico_projecao_tendencia(self, df_enriquecido, metricas, projecoes, output_dir):
+        from salesinsight import gerar_visualizacoes
+        graficos_dir = os.path.join(output_dir, "graficos")
+        gerar_visualizacoes(df_enriquecido, metricas, projecoes=projecoes, output_dir=graficos_dir)
+        arquivo = os.path.join(graficos_dir, "projecao_tendencia.png")
+        assert os.path.isfile(arquivo), "projecao_tendencia.png não foi criado"
+        assert os.path.getsize(arquivo) > 0, "projecao_tendencia.png está vazio"
+
+    def test_todos_7_graficos_com_args_completos(self, df_enriquecido, metricas, clientes, projecoes, output_dir):
+        from salesinsight import gerar_visualizacoes
+        graficos_dir = os.path.join(output_dir, "graficos")
+        gerar_visualizacoes(df_enriquecido, metricas, clientes=clientes, projecoes=projecoes, output_dir=graficos_dir)
+        pngs = [f for f in os.listdir(graficos_dir) if f.endswith(".png")]
+        assert len(pngs) >= 7
 
     def test_nao_modifica_dataframe(self, df_enriquecido, metricas, output_dir):
         import pandas as pd

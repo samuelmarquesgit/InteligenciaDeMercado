@@ -1,13 +1,20 @@
 # SalesInsight PY — Pipeline de Análise Preditiva de Vendas
 
-> Mini-Projeto Avaliativo · Módulo 01 · Semana 08 · Desenvolvedor(a) em IA para Análise Preditiva [T1] · SCTEC
+> Mini-Projeto Avaliativo · Módulo 01 · Turma de IA para Análise Preditiva · SCTEC 2026
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://python.org)
-[![pandas](https://img.shields.io/badge/pandas-2.x-150458?logo=pandas)](https://pandas.pydata.org)
-[![NumPy](https://img.shields.io/badge/NumPy-1.x-013243?logo=numpy)](https://numpy.org)
-[![Matplotlib](https://img.shields.io/badge/Matplotlib-3.x-orange)](https://matplotlib.org)
-[![Seaborn](https://img.shields.io/badge/Seaborn-0.13-76b9d8)](https://seaborn.pydata.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+---
+
+## Sumário
+
+- [Sobre o Projeto](#sobre-o-projeto)
+- [O que o sistema analisa](#o-que-o-sistema-analisa)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Como Executar](#como-executar)
+- [Dependências](#dependências)
+- [Conceitos de Python Aplicados](#conceitos-de-python-aplicados)
+- [Arquitetura Cliente-Servidor](#arquitetura-cliente-servidor-contexto)
+- [Ferramentas Utilizadas](#ferramentas-utilizadas)
+- [Autores](#autores)
 
 ---
 
@@ -15,7 +22,14 @@
 
 O **SalesInsight PY** é um pipeline completo de análise e visualização de dados de vendas desenvolvido 100% em Python. O sistema lê, limpa, transforma, analisa e visualiza um dataset de vendas de varejo, gerando métricas agregadas, segmentação de clientes e uma projeção simples de tendência de receita.
 
-O projeto é entregue como parte avaliativa do Módulo 01 do curso de IA para Análise Preditiva da SCTEC, com peso de **25% da nota do módulo** e prazo de entrega em **08/06/2026 às 12h**.
+Entregue como parte avaliativa do Módulo 01 do curso de **IA para Análise Preditiva** da SCTEC, com peso de **25% da nota do módulo** e prazo de entrega em **08/06/2026 às 12h**.
+
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://python.org)
+[![pandas](https://img.shields.io/badge/pandas-2.x-150458?logo=pandas)](https://pandas.pydata.org)
+[![NumPy](https://img.shields.io/badge/NumPy-1.x-013243?logo=numpy)](https://numpy.org)
+[![Matplotlib](https://img.shields.io/badge/Matplotlib-3.x-orange)](https://matplotlib.org)
+[![Seaborn](https://img.shields.io/badge/Seaborn-0.13-76b9d8)](https://seaborn.pydata.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
 ---
 
@@ -68,7 +82,7 @@ InteligenciaDeMercado/
 
 ```bash
 # 1. Clone o repositório
-git clone git@github.com:samuelmarquesgit/InteligenciaDeMercado.git
+git clone https://github.com/samuelmarquesgit/InteligenciaDeMercado.git
 cd InteligenciaDeMercado
 
 # 2. Crie e ative o ambiente virtual
@@ -149,22 +163,14 @@ Neste projeto, os dados são lidos de um arquivo local CSV. Em um cenário de pr
 
 ---
 
-## Quadro Kanban
+## Autores
 
-> Acesse o quadro no GitHub Projects: [link do projeto no GitHub Projects]
+**Samuel Magalhães Marques** — [@samuelmarquesgit](https://github.com/samuelmarquesgit)
 
----
+**Bruno Duarte da Silveira** — [@bruno-d-silveira](https://github.com/bruno-d-silveira)
 
-## Vídeo de Demonstração
-
-> [Inserir link do Google Drive ou YouTube aqui]
+**Eduardo Schmidt Bauer**
 
 ---
 
-## Autor
-
-**Samuel Marques** — [@samuelmarquesgit](https://github.com/samuelmarquesgit)
-
----
-
-*Projeto desenvolvido para a disciplina de IA – Desenvolvimento de IA para Análise Preditiva · SCTEC · 2026*
+*Mini-Projeto desenvolvido para a disciplina de IA para Análise Preditiva · SCTEC · Turma 2026*
