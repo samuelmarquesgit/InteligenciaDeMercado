@@ -1,86 +1,87 @@
 # Design — SalesInsight PY
 
-> Decisões de design de código e interface de usuário (console)
+> Decisões de design de código, interface de console e visualizações
 
 ---
 
 ## Interface de Console
 
-O SalesInsight PY é uma aplicação CLI (Command Line Interface). A "interface" é o output formatado no console durante a execução do pipeline.
+O SalesInsight PY é uma aplicação CLI. A "interface" é o output formatado no console durante a execução do pipeline.
 
-### Padrão de Formatação dos Títulos de Seção
-
-```python
-# Seções principais
-print("\n" + "="*60)
-print("   SALESINSIGHT PY – Pipeline de Análise de Dados de Vendas")
-print("="*60)
-
-# Subsections
-print("\n=== INSPEÇÃO INICIAL DO DATASET ===")
-print("\n=== RELATÓRIO DE LIMPEZA ===")
-print("\n=== COLUNAS DERIVADAS CRIADAS ===")
-print("\n=== RECEITA POR MÊS ===")
-print("\n=== TOP 5 PRODUTOS POR RECEITA ===")
-print("\n=== SEGMENTAÇÃO DE CLIENTES ===")
-print("\n=== ESTATÍSTICAS COM NUMPY ===")
-print("\n=== LIMPEZA COM REGEX ===")
-print("\n=== PROJEÇÃO DE TENDÊNCIA (Média Móvel Simples) ===")
-print("\n=== DETALHAMENTO DAS PROJEÇÕES ===")
-print("\n=== VISUALIZAÇÕES GERADAS COM SUCESSO ===")
-```
-
-### Padrão de Mensagens de Status
+### Padrão de Formatação
 
 ```python
-# Informações de carregamento (classe)
-print(f"[AnalisadorDeVendas] Arquivo carregado: {self.caminho_arquivo}")
-print(f"[AnalisadorDeVendas] Relatório exportado: {caminho}")
+# Cabeçalho principal
+print("\n" + "=" * 55)
+print("  SALESINSIGHT PY — Pipeline de Análise de Vendas")
+print("=" * 55)
 
-# Avisos
-print("[AVISO] Rode .analisar() antes de projetar.")
+# Seções internas (prefixo com RF)
+print(f"  [RF01] Dataset gerado: {n} registros | salvo em vendas.csv")
+print(f"  [RF03] Limpeza: {inicial} → {final} registros ({removidos} removidos)")
+print(f"  [RF07] NumPy stats → média: R$ {media:,.2f} | total: R$ {total:,.2f}")
 
-# Info
-print("\n[INFO] Gerando dataset sintético...")
+# Separadores de seção
+print("\n" + "=" * 55)
+print("  INSPEÇÃO DOS DADOS")
+print("=" * 55)
 
-# Conclusão
-print("\n[CONCLUÍDO] Pipeline finalizado com sucesso!")
+# Resumo executivo
+print("\n" + "─" * 45)
+print("  RESUMO EXECUTIVO")
+print("─" * 45)
+print(f"  Receita total  : R$ {total:>15,.2f}")
 ```
+
+### Convenções de Output
+
+| Tipo | Formato | Exemplo |
+|---|---|---|
+| Progresso de RF | `[RFxx] mensagem` | `[RF04] Colunas derivadas criadas: [...]` |
+| Classe | `[NomeClasse] mensagem` | `[Analisador] Carregado: (200, 8)` |
+| Aviso | `⚠` na linha | `quantidade  5 ⚠` |
+| Números monetários | `R$ X.XXX,XX` | `R$ 12.345,67` |
 
 ---
 
 ## Design das Visualizações
 
-### Paleta de Cores
-
-| Gráfico | Cor Principal | Lib |
-|---|---|---|
-| Linha receita/mês | `#2196F3` (azul) + fill alpha 0.15 | Matplotlib |
-| Barras top produtos | `"Blues_d"` | Seaborn |
-| Boxplot regiões | `"Set2"` | Seaborn |
-
-### Configurações Globais
+### Configuração Global
 
 ```python
 sns.set_theme(style="whitegrid", palette="muted")
-plt.rcParams["figure.figsize"] = (12, 6)
-plt.rcParams["axes.titlesize"] = 14
-plt.rcParams["axes.labelsize"] = 12
+matplotlib.use("Agg")  # Backend sem display
 ```
+
+### Gráficos Implementados
+
+| # | Título | Tipo | Cor Principal | Arquivo |
+|---|---|---|---|---|
+| 1 | Receita por Mês — 2024 | Linha + área | `#4C72B0` (azul) | `vendas_por_mes.png` |
+| 2 | Top 5 Produtos por Receita | Barras horizontais | `#DD8452` (laranja) | `top_produtos.png` |
+| 3 | Distribuição de Receita por Região | Pizza | Paleta padrão matplotlib | `distribuicao_regioes.png` |
 
 ### Padrão por Gráfico
 
 ```python
-fig, ax = plt.subplots()
-# ... plot ...
-ax.set_title("Título Descritivo (Ano)")
+fig, ax = plt.subplots(figsize=(W, H))
+# ... plot code ...
+ax.set_title("Título Descritivo", fontsize=14, fontweight="bold")
 ax.set_xlabel("Eixo X")
 ax.set_ylabel("Eixo Y")
-plt.tight_layout()
-plt.savefig(caminho, dpi=150)
-plt.close()
-print(f"  Gráfico exportado: {caminho}")
+fig.savefig(caminho, dpi=100, bbox_inches="tight")
+plt.close(fig)
 ```
+
+### Parâmetros de Exportação
+
+| Parâmetro | Valor | Motivo |
+|---|---|---|
+| `dpi` | 100 | Qualidade adequada para apresentação |
+| `bbox_inches` | `"tight"` | Evita labels cortados nas bordas |
+| `figsize` gráfico 1 | `(12, 5)` | Linha horizontal: largo e estreito |
+| `figsize` gráfico 2 | `(10, 5)` | Barras: médio |
+| `figsize` gráfico 3 | `(8, 8)` | Pizza: quadrado |
 
 ---
 
@@ -88,98 +89,110 @@ print(f"  Gráfico exportado: {caminho}")
 
 ### Princípios Aplicados
 
-1. **Single Responsibility:** cada método faz uma coisa
+1. **Single Responsibility:** cada método executa uma etapa do pipeline
 2. **Method Chaining:** todos os métodos retornam `self`
-3. **State Management:** estado do pipeline armazenado nos atributos da instância
-4. **Herança simples:** `AnalisadorComProjecao` estende sem quebrar a interface de `AnalisadorDeVendas`
+3. **State Management:** estado armazenado nos atributos da instância
+4. **Herança simples:** `AnalisadorComProjecao` estende sem quebrar a interface pai
 
-### Diagrama de Estado da Classe
+### Diagrama de Estado
 
 ```
 Estado inicial (após __init__)
-│  self.df_bruto = None
-│  self.df_limpo = None
-│  self.metricas = {}
-│  self.clientes = None
-│  self.relatorio_limpeza = {}
+│  self.df_bruto   = None
+│  self.df_limpo   = None
+│  self.metricas   = None
+│  self.clientes   = None
+│  self.stats      = None
 │
 ▼ .carregar()
 │  self.df_bruto = DataFrame(200 × 8)
 │
 ▼ .limpar()
-│  self.df_limpo = DataFrame(~180 × 8)
-│  self.relatorio_limpeza = {registros_removidos: ...}
+│  self.df_limpo = DataFrame(~184 × 8)  ← remove ~16 linhas
 │
 ▼ .transformar()
-│  self.df_limpo = DataFrame(~180 × 14)  ← +6 colunas
+│  self.df_limpo = DataFrame(~184 × 14) ← +6 colunas derivadas
 │
 ▼ .analisar()
-│  self.metricas = {por_mes, top_produtos, por_categoria, por_regiao}
+│  self.metricas = {por_mes (12), top_produtos (5), por_categoria (4), por_regiao (5)}
 │  self.clientes = DataFrame(50 × 3)
+│  self.stats    = {media, mediana, std, total, ...}
 │
-▼ .visualizar()
-│  3 PNG gerados em outputs/graficos/
+▼ .projetar_tendencia()  [AnalisadorComProjecao]
+│  self.projecoes = [{mes: 13, receita_projetada: X}, ...]
 │
-▼ .exportar_relatorio()
-   1 CSV gerado em outputs/
+▼ .resumo()
+   Exibe: receita total, clientes únicos, média mensal
 ```
 
 ---
 
 ## Design do Dataset Sintético
 
-### Regras de Geração de Dados Sujos
-
-```python
-# 5% de nulos em quantidade
-if random.random() < 0.05:
-    quantidade = None
-
-# 4% de nulos em preco_unitario
-if random.random() < 0.04:
-    preco = None
-
-# 3% de strings com espaço extra
-if random.random() < 0.03:
-    produto = "  " + produto
-
-# 2% de datas inválidas
-"DATA INVÁLIDA" if random.random() <= 0.02 else data.strftime("%Y-%m-%d")
-```
-
 ### Distribuição de Valores
 
 | Campo | Valores | Distribuição |
 |---|---|---|
-| produto | 7 produtos | Uniforme |
-| categoria | 3 categorias | Mapeada ao produto |
-| regiao | 5 regiões | Uniforme |
-| cliente | 50 clientes | Uniforme |
-| quantidade | 1–10 | randint uniforme |
-| preco | base × [0.85, 1.15] | Uniforme contínua |
-| data | 2024-01-01 a 2024-12-31 | Aleatória |
+| `produto` | 7 produtos (Notebook, Smartphone, Tablet, Monitor, Teclado, Mouse, Headset) | Uniforme aleatória |
+| `categoria` | 4 categorias (Computadores, Mobile, Periféricos, Áudio) | Mapeada ao produto |
+| `regiao` | 5 regiões (Sudeste, Sul, Nordeste, Centro-Oeste, Norte) | Uniforme aleatória |
+| `cliente` | 50 clientes (Cliente_001 a Cliente_050) | Todos presentes + repetidos |
+| `quantidade` | 1–10 | `np.integers(1, 11)` |
+| `preco_unitario` | R$ 50 – R$ 5.000 | `np.uniform(50.0, 5000.0)` |
+| `data_venda` | 2024-01-01 a 2024-12-31 | `pd.date_range` uniformemente espaçadas |
+
+### Dados Sujos Injetados
+
+| Tipo de sujeira | Quantidade | Coluna afetada |
+|---|---|---|
+| Nulos | 5 | `quantidade` |
+| Nulos | 5 | `preco_unitario` |
+| Data inválida | 1 | `data_venda` (linha 0) |
+| Espaços extras | 3 | `cliente` |
 
 ---
 
-## Estrutura de Saídas
+## Design das Exportações
 
 ### CSV
 
-Exportados com `encoding="utf-8-sig"` para compatibilidade com Excel no Windows.
+```python
+df.to_csv(caminho, index=False, encoding="utf-8")
+```
+
+Encoding `utf-8` — compatível com Python, Colab e leitores modernos.
 
 ### JSON
 
+```python
+json.dump(stats, f, ensure_ascii=False, indent=2)
+```
+
+Estrutura do `estatisticas_gerais.json`:
 ```json
 {
-    "media": 1234.56,
-    "mediana": 987.65,
-    "desvio_padrao": 456.78,
-    "total": 234567.89
+  "media": 1234.56,
+  "mediana": 987.65,
+  "desvio_padrao": 456.78,
+  "total": 234567.89,
+  "minimo": 50.0,
+  "maximo": 49999.99,
+  "percentil_25": 600.0,
+  "percentil_75": 15000.0,
+  "media_normalizada": 0.3142,
+  "gerado_em": "2026-06-01 10:30:00"
 }
 ```
 
-### PNG
+---
 
-- Resolução: `dpi=150` (qualidade adequada para apresentação)
-- Formato: `figsize=(12, 6)` — paisagem
-- `plt.tight_layout()` antes de salvar (evita labels cortados)
+## Decisões de Nomenclatura
+
+| Elemento | Convenção | Exemplo |
+|---|---|---|
+| Funções | `snake_case` em português, verbo no infinitivo | `gerar_dataset_vendas` |
+| Classes | `PascalCase` em português | `AnalisadorDeVendas` |
+| Variáveis locais | `snake_case` em português | `df_limpo`, `por_mes` |
+| Constantes de módulo | `UPPER_SNAKE_CASE` | `PRODUTOS`, `REGIOES` |
+| Parâmetros de função | `snake_case` em português | `n_registros`, `output_dir` |
+| Arquivos de saída | `snake_case` em português | `metricas_por_mes.csv` |

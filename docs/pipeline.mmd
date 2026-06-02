@@ -1,0 +1,90 @@
+---
+title: SalesInsight PY — Pipeline de Análise de Vendas
+---
+
+%%{ init: { "theme": "base", "themeVariables": { "primaryColor": "#4C72B0", "primaryTextColor": "#fff", "lineColor": "#555" } } }%%
+
+flowchart TD
+
+    %% ── Entrada ──────────────────────────────────────────────
+    CSV[(vendas.csv\n200 × 8)]
+
+    %% ── Camada 1: Ingestão ───────────────────────────────────
+    RF01["RF01\ngerar_dataset_vendas()\n• 200 registros sintéticos\n• seed=42 reprodutível"]
+    RF02["RF02\ninspecionar_dados()\n• shape, dtypes\n• isnull, duplicatas"]
+
+    %% ── Camada 2: Limpeza ────────────────────────────────────
+    RF03["RF03\nlimpar_dados()\n• str.strip()\n• pd.to_datetime(errors='coerce')\n• dropna críticos"]
+    RF13["RF13\nlimpar_strings_com_regex()\n• re.compile + re.sub\n• cliente_limpo, cliente_valido"]
+
+    %% ── Camada 3: Transformação ──────────────────────────────
+    RF04["RF04\ncriar_colunas_derivadas()\n• receita_total\n• mes, mes_nome, trimestre, ano\n• faixa_receita_item (np.select)"]
+    RF11["RF11\nprocessar_coluna(df, col, func)\n• Higher-order function\n• lambda aplicada com .apply()"]
+
+    %% ── Camada 4: Análise ────────────────────────────────────
+    RF05["RF05\ncalcular_metricas()\n• groupby por mês\n• top 5 produtos\n• por categoria e região"]
+    RF06["RF06\nsegmentar_clientes()\n• lambda: Bronze / Prata / Ouro\n• 50 clientes classificados"]
+    RF07["RF07\ncalcular_estatisticas_numpy()\n• np.mean, median, std, sum\n• percentile P25/P75\n• broadcasting min-max"]
+
+    %% ── Camada 5: Saídas ─────────────────────────────────────
+    RF08["RF08\ngerar_visualizacoes()\n• Linha: receita por mês\n• Barras: top produtos\n• Pizza: distribuição regiões"]
+    RF12["RF12\nexportar_resultados()\n• metricas_por_mes.csv\n• segmentacao_clientes.csv\n• estatisticas_gerais.json"]
+    RF10["RF10\nAnalisadorComProjecao\n• super().__init__()\n• projetar_tendencia()\n• crescimento composto 5% a.m."]
+    RF09["RF09\nAnalisadorDeVendas\n• method chaining\n• .carregar().limpar()\n• .transformar().analisar()\n• .resumo()"]
+
+    %% ── Orquestração ─────────────────────────────────────────
+    RF14["RF14\nmain()\n• Orquestra todo o pipeline\n• if __name__ == '__main__'"]
+
+    %% ── Outputs ──────────────────────────────────────────────
+    PNG[("📊 outputs/graficos/\nvendas_por_mes.png\ntop_produtos.png\ndistribuicao_regioes.png")]
+    FILES[("📄 outputs/\nmetricas_por_mes.csv\nsegmentacao_clientes.csv\nestatisticas_gerais.json")]
+    CONSOLE[/"🖥️ Console\nDiagnóstico + Métricas\nResumo Executivo\nProjeções"/]
+
+    %% ── Fluxo principal ──────────────────────────────────────
+    CSV --> RF01
+    RF01 --> RF02
+    RF01 --> RF03
+    RF02 --> CONSOLE
+    RF03 --> RF13
+    RF13 --> RF04
+    RF04 --> RF11
+    RF11 --> RF05
+    RF11 --> RF06
+    RF11 --> RF07
+    RF05 --> RF08
+    RF05 --> RF12
+    RF06 --> RF12
+    RF07 --> RF12
+    RF08 --> PNG
+    RF12 --> FILES
+
+    %% ── Classes OOP ──────────────────────────────────────────
+    RF09 --> RF10
+    RF10 -.->|"orquestra via\nmethod chaining"| RF03
+    RF10 -.->|"orquestra via\nmethod chaining"| RF05
+    RF10 -.->|"orquestra via\nmethod chaining"| RF08
+
+    %% ── main orquestra tudo ──────────────────────────────────
+    RF14 --> RF01
+    RF14 --> RF10
+
+    RF10 --> CONSOLE
+
+    %% ── Estilos ──────────────────────────────────────────────
+    classDef ingestao fill:#4C72B0,stroke:#2c4a7c,color:#fff
+    classDef limpeza fill:#DD8452,stroke:#a05a30,color:#fff
+    classDef transform fill:#55A868,stroke:#336644,color:#fff
+    classDef analise fill:#C44E52,stroke:#8c2a2d,color:#fff
+    classDef saida fill:#8172B2,stroke:#5a4d80,color:#fff
+    classDef oop fill:#937860,stroke:#6b5540,color:#fff
+    classDef orq fill:#64B5CD,stroke:#3a7d96,color:#fff
+    classDef output fill:#f5f5f5,stroke:#999,color:#333
+
+    class RF01,RF02 ingestao
+    class RF03,RF13 limpeza
+    class RF04,RF11 transform
+    class RF05,RF06,RF07 analise
+    class RF08,RF12 saida
+    class RF09,RF10 oop
+    class RF14 orq
+    class PNG,FILES,CONSOLE,CSV output
