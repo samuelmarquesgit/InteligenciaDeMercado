@@ -47,6 +47,16 @@ def clientes(df_enriquecido):
     return segmentar_clientes(df_enriquecido)
 
 
+@pytest.fixture(scope="session")
+def projecoes(metricas):
+    """Retorna lista de projeções de 3 meses."""
+    ultimo_mes = int(metricas["por_mes"]["mes"].max())
+    return [
+        {"mes": ultimo_mes + i, "receita_projetada": round(metricas["total_geral"] / 12 * (1.05 ** i), 2)}
+        for i in range(1, 4)
+    ]
+
+
 @pytest.fixture
 def output_dir(tmp_path):
     """Retorna um diretório temporário para outputs de testes."""

@@ -338,8 +338,9 @@ def calcular_estatisticas_numpy(df: pd.DataFrame) -> dict:
 # ─── RF08: Visualizações ─────────────────────────────────────────────────────
 
 def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
+                        clientes: pd.DataFrame = None, projecoes: list = None,
                         output_dir: str = "outputs/graficos") -> None:
-    """RF08 — Gera 3 gráficos PNG com matplotlib e seaborn."""
+    """RF08 — Gera 7 gráficos PNG com matplotlib e seaborn."""
     os.makedirs(output_dir, exist_ok=True)
     sns.set_theme(style="whitegrid", palette="muted")
 
@@ -381,8 +382,65 @@ def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
     plt.tight_layout()
     fig.savefig(os.path.join(output_dir, "distribuicao_regioes.png"), dpi=100)
     plt.close(fig)
+            
+    # 4. Boxplot - receita por região (exigido pelo PRD)
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.boxplot(data=df, x="regiao", y="receita_total", hue="regiao", palette="muted", legend=False, ax=ax)
+    ax.set_title("Distribuição de Receita por Região (Boxplot)", fontsize=14, fontweight="bold")
+    ax.set_xlabel("Região")
+    ax.set_ylabel("Receita por Transação (R$)")
+    plt.tight_layout()
+    fig.savefig(os.path.join(output_dir, "boxplot_regioes.png"), dpi=150)
+    plt.close(fig)
 
-    print(f"  [RF08] 3 gráficos salvos em '{output_dir}'")
+    # 5. Heatmap — mês × categoria
+    fig, ax = plt.subplots(figsize=(12, 5))
+    pivot = df.pivot_table(values="receita_total", index="categoria",
+                           columns="mes", aggfunc="sum")
+    pivot.columns = ["Jan","Fev","Mar","Abr","Mai","Jun",
+                     "Jul","Ago","Set","Out","Nov","Dez"]
+    sns.heatmap(pivot, annot=True, fmt=".0f", cmap="Blues", linewidths=0.5, ax=ax)
+    ax.set_title("Receita por Categoria × Mês", fontsize=14, fontweight="bold")
+    plt.tight_layout()
+    fig.savefig(os.path.join(output_dir, "heatmap_categoria_mes.png"), dpi=150)
+    plt.close(fig)
+
+    # 6. Donut - segmentação de clientes
+    if clientes is not None:
+        fig, ax = plt.subplots(figsize=(7, 7))
+        contagem = clientes["segmento"].value_counts()
+        cores = {"Ouro": "#FFD700", "Prata": "#C0C0C0", "Bronze": "#CD7F32"}
+        cores_lista = [cores.get(s, "#999999") for s in contagem.index]
+        ax.pie(contagem, labels=contagem.index, autopct="%1.1f%%",
+               colors=cores_lista, startangle=90,
+               wedgeprops=dict(width=0.5))
+        ax.set_title("Segmentação de Clientes", fontsize=14, fontweight="bold")
+        plt.tight_layout()
+        fig.savefig(os.path.join(output_dir, "segmentacao_clientes.png"), dpi=150)
+        plt.close(fig)
+
+    # 7. Line chart + projeção
+    if projecoes:
+        fig, ax = plt.subplots(figsize=(13, 5))
+        por_mes = metricas["por_mes"]
+        ax.plot(por_mes["mes"], por_mes["receita_total"],
+                marker="o", color="#4C72B0", linewidth=2, label="Realizado 2024")
+        meses_proj   = [p["mes"] for p in projecoes]
+        valores_proj = [p["receita_projetada"] for p in projecoes]
+        ax.plot(meses_proj, valores_proj,
+                marker="s", color="#DD8452", linewidth=2,
+                linestyle="--", label="Projeção")
+        ax.axvline(x=12, color="gray", linestyle=":", linewidth=1)
+        ax.legend()
+        ax.set_title("Receita Realizada + Projeção", fontsize=14, fontweight="bold")
+        ax.set_xlabel("Mês")
+        ax.set_ylabel("Receita (R$)")
+        plt.tight_layout()
+        fig.savefig(os.path.join(output_dir, "projecao_tendencia.png"), dpi=150)
+        plt.close(fig)
+
+    n = len([f for f in os.listdir(output_dir) if f.endswith(".png")])
+    print(f"  [RF08] {n} gráficos salvos em '{output_dir}'") 
 
 
 # ─── RF09: Classe AnalisadorDeVendas com method chaining ─────────────────────
@@ -571,7 +629,7 @@ def main() -> None:
     )
 
     # RF08 — Visualizações
-    gerar_visualizacoes(df, analisador.metricas)
+    gerar_visualizacoes(df, analisador.metricas, analisador.clientes, analisador.projecoes)
 
     # RF12 — Exportação
     exportar_resultados(analisador.metricas, analisador.clientes, analisador.stats)
