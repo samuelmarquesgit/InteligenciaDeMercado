@@ -23,6 +23,7 @@ import os
 import re
 import json
 import random
+import datetime
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -323,15 +324,23 @@ def segmentar_clientes(df: pd.DataFrame) -> pd.DataFrame:
 def calcular_estatisticas_numpy(df: pd.DataFrame) -> dict:
     """RF07 — Calcula estatísticas descritivas usando funções NumPy."""
     valores = df["receita_total"].to_numpy()
+    # Broadcasting vetorizado: normaliza os valores para [0, 1]
+    valores_norm = (valores - np.min(valores)) / (np.max(valores) - np.min(valores))
+
     stats = {
-        "media":         float(np.mean(valores)),
-        "mediana":       float(np.median(valores)),
-        "desvio_padrao": float(np.std(valores)),
-        "total":         float(np.sum(valores)),
-        "minimo":        float(np.min(valores)),
-        "maximo":        float(np.max(valores)),
+        "media":              float(np.mean(valores)),
+        "mediana":            float(np.median(valores)),
+        "desvio_padrao":      float(np.std(valores)),
+        "total":              float(np.sum(valores)),
+        "minimo":             float(np.min(valores)),
+        "maximo":             float(np.max(valores)),
+        "percentil_25":       float(np.percentile(valores, 25)),
+        "percentil_75":       float(np.percentile(valores, 75)),
+        "media_normalizada":  float(np.mean(valores_norm)),
+        "gerado_em":          datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
     print(f"  [RF07] NumPy stats → média: R$ {stats['media']:,.2f} | total: R$ {stats['total']:,.2f}")
+    print(f"  [RF07] Percentis   → P25: R$ {stats['percentil_25']:,.2f} | P75: R$ {stats['percentil_75']:,.2f}")
     return stats
 
 
@@ -344,10 +353,12 @@ def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
     os.makedirs(output_dir, exist_ok=True)
     sns.set_theme(style="whitegrid", palette="muted")
 
-    # 1. Vendas por mês
+    # 1. Receita por mês — gráfico de linha
     fig, ax = plt.subplots(figsize=(12, 5))
     por_mes = metricas["por_mes"]
-    ax.bar(por_mes["mes"], por_mes["receita_total"], color="#4C72B0", edgecolor="white")
+    ax.plot(por_mes["mes"], por_mes["receita_total"],
+            marker="o", linewidth=2.5, color="#4C72B0", markersize=7)
+    ax.fill_between(por_mes["mes"], por_mes["receita_total"], alpha=0.15, color="#4C72B0")
     ax.set_title("Receita por Mês — 2024", fontsize=14, fontweight="bold")
     ax.set_xlabel("Mês")
     ax.set_ylabel("Receita (R$)")
@@ -555,6 +566,10 @@ def exportar_resultados(metricas: dict, clientes: pd.DataFrame, stats: dict) -> 
     with open("outputs/estatisticas_gerais.json", "w", encoding="utf-8") as f:
         json.dump(stats, f, ensure_ascii=False, indent=2)
 
+    # Confirma integridade: lê o JSON de volta com json.load()
+    with open("outputs/estatisticas_gerais.json", "r", encoding="utf-8") as f:
+        verificado = json.load(f)
+    print(f"  [RF12] JSON verificado — média: R$ {verificado['media']:,.2f} | total: R$ {verificado['total']:,.2f}")
     print("  [RF12] Exportados: metricas_por_mes.csv | segmentacao_clientes.csv | estatisticas_gerais.json")
 
 
