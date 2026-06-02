@@ -34,9 +34,6 @@ outputs/graficos/*.png
 !outputs/graficos/.gitkeep
 !outputs/context_pack.md
 
-# Jupyter Notebook
-.ipynb_checkpoints/
-*.ipynb
 
 # IDEs e editores
 .vscode/

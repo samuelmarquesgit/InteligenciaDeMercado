@@ -365,8 +365,7 @@ def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
     ax.set_xticks(range(1, 13))
     ax.set_xticklabels(["Jan","Fev","Mar","Abr","Mai","Jun",
                          "Jul","Ago","Set","Out","Nov","Dez"])
-    plt.tight_layout()
-    fig.savefig(os.path.join(output_dir, "vendas_por_mes.png"), dpi=100)
+    fig.savefig(os.path.join(output_dir, "vendas_por_mes.png"), dpi=100, bbox_inches="tight")
     plt.close(fig)
 
     # 2. Top produtos
@@ -376,8 +375,7 @@ def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
     ax.set_title("Top 5 Produtos por Receita", fontsize=14, fontweight="bold")
     ax.set_xlabel("Receita Total (R$)")
     ax.invert_yaxis()
-    plt.tight_layout()
-    fig.savefig(os.path.join(output_dir, "top_produtos.png"), dpi=100)
+    fig.savefig(os.path.join(output_dir, "top_produtos.png"), dpi=100, bbox_inches="tight")
     plt.close(fig)
 
     # 3. Distribuição por região
@@ -390,8 +388,7 @@ def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
         startangle=140,
     )
     ax.set_title("Distribuição de Receita por Região", fontsize=14, fontweight="bold")
-    plt.tight_layout()
-    fig.savefig(os.path.join(output_dir, "distribuicao_regioes.png"), dpi=100)
+    fig.savefig(os.path.join(output_dir, "distribuicao_regioes.png"), dpi=100, bbox_inches="tight")
     plt.close(fig)
             
     # 4. Boxplot - receita por região (exigido pelo PRD)
