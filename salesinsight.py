@@ -450,6 +450,35 @@ def gerar_visualizacoes(df: pd.DataFrame, metricas: dict,
     n = len([f for f in os.listdir(output_dir) if f.endswith(".png")])
     print(f"  [RF08] {n} gráficos salvos em '{output_dir}'") 
 
+    # 8. Volume de vendas por mes
+
+    ABREV_MESES = {
+    1: "Jan", 2: "Fev", 3: "Mar", 4: "Abr",
+    5: "Mai", 6: "Jun", 7: "Jul", 8: "Ago",
+    9: "Set", 10: "Out", 11: "Nov", 12: "Dez"}
+
+    df["mes_abrev"] = df["mes"].map(ABREV_MESES)
+    
+    vendas_mes = (
+    df.groupby(["mes", "mes_abrev"])["quantidade"]
+    .sum()
+    .reset_index()
+    .sort_values("mes") )
+        
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    sns.barplot(
+    data=vendas_mes,
+    x="mes_abrev",
+    y="quantidade",
+    ax=ax)
+  
+    ax.set_title("Quantidade de Produtos Vendidos por Mês")
+    ax.set_xlabel("Mês")
+    ax.set_ylabel("Quantidade Vendida (UN)")
+
+    fig.savefig(os.path.join(output_dir, "volume_mes.png"),dpi=150,bbox_inches="tight")
+    plt.close(fig)
 
 # ─── RF09: Classe AnalisadorDeVendas com method chaining ─────────────────────
 
