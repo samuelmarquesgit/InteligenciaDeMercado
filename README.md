@@ -244,4 +244,6 @@ Neste projeto, os dados são lidos de um arquivo CSV local. Em um cenário de pr
 **Bruno Duarte da Silveira** — [@bruno-d-silveira] (https://github.com/bruno-d-silveira)
 **Eduardo Schmidt Bauer** — [@eduardobauer1981] (https://github.com/eduardobauer1981)
 
+https://drive.google.com/file/d/19ffDCVgCQLUm6Sc9lnzEZP7KXclqFmtx/view?usp=sharing
+
 *Projeto desenvolvido para a disciplina de IA – Desenvolvimento de IA para Análise Preditiva · SCTEC · 2026*
