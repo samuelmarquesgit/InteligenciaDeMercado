@@ -18,9 +18,8 @@ O **SalesInsight PY** é um pipeline completo de análise e visualização de da
 
 O sistema executa o ciclo completo de dados: **ingestão → limpeza → transformação → análise → visualização → exportação**, produzindo métricas agregadas, segmentação de clientes Bronze/Prata/Ouro, estatísticas vetorizadas com NumPy e projeção de tendência de receita, com saídas em CSV, JSON e PNG.
 
-> **Prazo de entrega:** 08/06/2026 às 12h · **Peso:** 25% da nota do Módulo 01
+> **Prazo de entrega:** 08/06/2026 às 22h · **Peso:** 25% da nota do Módulo 01
 
----
 
 ## O que o sistema analisa
 
