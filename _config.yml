@@ -1,0 +1,36 @@
+# GitHub Pages Configuration
+# Tema visual
+theme: jekyll-theme-minimal
+
+# Metadados do projeto
+title: Inteligência de Mercado
+description: Análise e visualização de dados de mercado com Python e Jupyter Notebooks
+url: https://samuelmarquesgit.github.io/InteligenciaDeMercado
+
+# Configurações gerais
+baseurl: /InteligenciaDeMercado
+lang: pt-BR
+
+# Autor
+author:
+  name: Samuel Marques
+
+# Social
+social_links:
+  github: samuelmarquesgit
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-feed
+  - jekyll-relative-links
+
+# Configurações de build
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Configurações de performance
+future: false
+show_downloads: true
